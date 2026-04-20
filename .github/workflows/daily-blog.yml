@@ -6,6 +6,9 @@ on:
     - cron: '0 5 * * *'
   workflow_dispatch: # Allow manual trigger from GitHub
 
+permissions:
+  contents: write
+
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -35,3 +38,12 @@ jobs:
             git commit -m "Add 2 new blog posts - $(date +%Y-%m-%d)"
             git push
           fi
+
+      - name: Deploy to Netlify
+        uses: nwtgck/actions-netlify@v3
+        with:
+          publish-dir: '.'
+          production-deploy: true
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
