@@ -1,0 +1,37 @@
+name: Daily Blog Publisher
+
+on:
+  schedule:
+    # Runs every day at 05:00 UTC = 08:00 Israel time
+    - cron: '0 5 * * *'
+  workflow_dispatch: # Allow manual trigger from GitHub
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Generate 2 blog posts
+        run: node generate-blogs.mjs
+
+      - name: Commit and push new posts
+        run: |
+          git config user.name "Blog Bot"
+          git config user.email "bot@md-electric.com"
+          git add blog/posts/
+
+          # Only commit if there are new posts
+          if git diff --staged --quiet; then
+            echo "No new posts to publish"
+          else
+            git commit -m "Add 2 new blog posts - $(date +%Y-%m-%d)"
+            git push
+          fi

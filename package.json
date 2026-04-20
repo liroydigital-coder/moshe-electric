@@ -1,0 +1,10 @@
+{
+  "name": "md-electric",
+  "version": "1.0.0",
+  "description": "מ.ד שירותי חשמל - משה דהן - אתר עסקי",
+  "type": "module",
+  "scripts": {
+    "generate-blogs": "node generate-blogs.mjs",
+    "start": "npx serve ."
+  }
+}
